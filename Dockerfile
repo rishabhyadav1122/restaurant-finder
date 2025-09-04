@@ -20,6 +20,10 @@ COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 # Install PHP dependencies from composer.json
 RUN composer install --no-dev --optimize-autoloader
 
+# Create the database file and run migrations
+# The "|| true" is used to prevent the container from failing if the migration table already exists
+RUN php artisan migrate --force || true
+
 # Expose port 80 to the host machine
 EXPOSE 8000
 
